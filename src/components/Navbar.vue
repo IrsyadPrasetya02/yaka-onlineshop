@@ -1,12 +1,12 @@
 <template>
   <div>
-    <!-- Top Banner -->
-    <div class="bg-black text-white text-center py-1.5 text-xs">
+    <!-- Top Banner - Juga dibuat sticky -->
+    <div class="bg-black text-white text-center py-1.5 text-xs fixed top-0 left-0 w-full z-50">
       Elevate Your Style with Us
     </div>
 
-    <!-- Main Navbar -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <!-- Main Navbar - Sticky di bawah top banner -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 fixed top-[22px] left-0 w-full z-50">
       <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <!-- Logo -->
         <router-link to="/" class="flex items-center">
@@ -116,6 +116,9 @@
         </ul>
       </div>
     </nav>
+
+    <!-- Spacer untuk mengkompensasi tinggi navbar fixed -->
+    <div class="h-[86px]"></div> <!-- Top banner (22px) + Navbar (64px) -->
   </div>
 </template>
 

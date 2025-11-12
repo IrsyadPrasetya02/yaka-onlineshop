@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Top Banner - Juga dibuat sticky -->
-    <div class="bg-black text-white text-center py-1.5 text-xs fixed top-0 left-0 w-full z-50">
+    <div class="bg-black text-white text-center py-1 text-xs fixed top-0 left-0 w-full z-50">
       Elevate Your Style with Us
     </div>
 

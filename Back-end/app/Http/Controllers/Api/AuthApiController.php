@@ -19,12 +19,13 @@ class AuthApiController extends Controller
         ]);
 
         $user = User::create([
-            'username' => $validated['username'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'username' => $validated['Username'],
+            'email'    => $validated['Email'],
+            'password' => Hash::make($validated['Password']),
         ]);
 
         return response()->json([
+            'status'  => true,
             'message' => 'Registrasi berhasil',
             'user'    => $user
         ], 201);
@@ -38,13 +39,17 @@ class AuthApiController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Email atau password salah'], 401);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email atau password salah'
+            ], 401);
         }
 
         $user  = Auth::user();
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
+            'status' => true,
             'message' => 'Login berhasil',
             'token'   => $token,
             'user'    => $user
@@ -53,11 +58,20 @@ class AuthApiController extends Controller
 
     public function logout(Request $request)
     {
-        // Hapus token saat ini
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
+            'status'  => true,
             'message' => 'Logout berhasil'
         ]);
     }
+
+    public function user(Request $request)
+    {
+        return response()->json([
+            'status' => true,
+            'user' => $request->user()
+        ]);
+    }
+
 }

@@ -10,12 +10,12 @@ class HomeApiController extends Controller
 {
     public function index()
     {
-        // Pastikan relasi primaryImage aman jika belum ada
         $latest_products = Product::latest()->take(8)->get();
         $recommended     = Product::inRandomOrder()->take(6)->get();
         $categories      = Category::all();
 
         return response()->json([
+            'status' => true,
             'latest_products' => $latest_products,
             'recommended'     => $recommended,
             'categories'      => $categories,

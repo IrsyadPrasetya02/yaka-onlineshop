@@ -59,12 +59,13 @@
           </button>
 
           <!-- User Icon -->
-          <button class="hover:text-gray-600 transition">
+          <button class="hover:text-gray-600 transition" @click="goToPerson">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </button>
         </div>
+
 
         <!-- Mobile Menu Button -->
         <div class="md:hidden">
@@ -124,6 +125,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const isLoggedIn = ref(localStorage.getItem('loggedIn') === 'true') // cek dari localStorage
 
 const isOpen = ref(false)
 
@@ -134,6 +139,15 @@ const toggleMenu = () => {
 const closeMenu = () => {
   isOpen.value = false
 }
+
+const goToPerson = () => {
+  if (isLoggedIn.value) {
+    router.push('/account')  // sudah login
+  } else {
+    router.push('/login-cust') // guest → LoginCust page
+  }
+}
+
 </script>
 
 <style scoped>

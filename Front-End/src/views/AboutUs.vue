@@ -1,3 +1,25 @@
+<script setup>
+import { ref, onMounted, inject } from 'vue'
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+
+const axios = inject('axios')
+const aboutData = ref(null)
+const loading = ref(true)
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/about')
+    aboutData.value = response.data
+  } catch (error) {
+    console.error('About error:', error)
+  } finally {
+    loading.value = false
+  }
+})
+</script>
+
+
 <template>
   <div class="min-h-screen flex flex-col">
     <Navbar />
@@ -13,7 +35,3 @@
   </div>
 </template>
 
-<script setup>
-import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
-</script>

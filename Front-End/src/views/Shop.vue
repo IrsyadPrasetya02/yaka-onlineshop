@@ -189,11 +189,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, inject } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import CardProduk from '@/components/CardProduk.vue'
 import produkData from '@/data/Produk.js'
+
+const axios = inject('axios')
+const products = ref([])
+const loading = ref(true)
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/products')
+    products.value = response.data
+  } catch (error) {
+    console.error('Shop error:', error)
+  } finally {
+    loading.value = false
+  }
+})
 
 // Filter states - Temporary (before apply)
 const tempFilterKategori = ref([])
@@ -348,7 +363,7 @@ input[type="checkbox"]:checked {
 }
 
 input[type="checkbox"]:focus {
-  ring-color: black;
+  --tw-ring-color: black;
   border-color: black;
 }
 

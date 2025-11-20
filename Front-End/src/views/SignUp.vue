@@ -1,3 +1,44 @@
+<script setup>
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
+
+const axios = inject('axios')
+const router = useRouter()
+
+const form = ref({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
+})
+
+const error = ref('')
+const loading = ref(false)
+
+const handleRegister = async () => {
+  loading.value = true
+  error.value = ''
+  
+  try {
+    const response = await axios.post('/register', form.value)
+    
+    // Auto login setelah register
+    localStorage.setItem('token', response.data.token)
+    localStorage.setItem('user', JSON.stringify(response.data.user))
+    
+    // Redirect ke home
+    router.push('/')
+    
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Registration failed. Please try again.'
+    console.error('Register error:', err)
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+
 <template>
   <div class="signup-wrapper">
     <Navbar />
@@ -19,7 +60,7 @@
           <div class="input-group">
             <input
               type="text"
-              placeholder="Name"
+              placeholder="Username"
               class="input"
               :class="{ 'input-error': errors.name }"
               v-model="name"
@@ -89,7 +130,6 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-
 export default {
   name: "SignUpPage",
   components: { Navbar },
@@ -128,7 +168,6 @@ export default {
       this.errors.email = !this.email || !this.validateEmail(this.email);
       this.errors.password = !this.password || !this.validatePassword(this.password);
       this.errors.confirm = this.confirmPassword !== this.password || !this.confirmPassword;
-
       // Jika semua valid
       if (!this.errors.name && !this.errors.email && !this.errors.password && !this.errors.confirm) {
         console.log("Sign Up Data:", {
@@ -136,9 +175,8 @@ export default {
           email: this.email,
           password: this.password,
         });
-
         // Direct ke page login
-        this.$router.push('/login');
+        this.$router.push('/home');
       }
     },
   },
@@ -150,7 +188,6 @@ export default {
   background: #e5e5e5;
   min-height: 100vh;
 }
-
 .logo-img {
   max-width: 150px;
   width: 30vw;
@@ -159,14 +196,12 @@ export default {
   display: block;
   margin: 0 auto 20px;
 }
-
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
 }
-
 .signup-card {
   width: 100%;
   max-width: 480px;
@@ -176,18 +211,15 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
-
 .title {
   font-size: 22px;
   font-weight: bold;
 }
-
 .subtitle {
   font-size: 13px;
   color: #555;
   margin-bottom: 20px;
 }
-
 .input {
   width: 100%;
   height: 40px;
@@ -196,37 +228,31 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 .input-error {
   border-color: red;
 }
-
 .error-text {
   font-size: 11px;
   color: red;
   display: block;
   margin-bottom: 10px;
 }
-
 .password-wrapper {
   position: relative;
 }
-
 .eye-icon {
   position: absolute;
   right: 12px;
   top: 9px;
   cursor: pointer;
 }
-
 .eye {
   width: 22px;
   height: 22px;
 }
-
 .continue-btn {
   width: 100%;
-  background: #2b0d0c;
+  background: #190202;
   color: white;
   padding: 10px;
   border: none;
@@ -236,23 +262,19 @@ export default {
   margin-bottom: 20px;
   transition: 0.2s;
 }
-
 .continue-btn:hover {
-  background: #4e1715;
+  background: #2b0d0c;
   transform: scale(1.02);
 }
-
 .signup-area {
   margin-top: 5px;
   font-size: 13px;
 }
-
 .signup {
   color: #a10000;
   margin-left: 5px;
   cursor: pointer;
 }
-
 @media (max-width: 480px) {
   .signup-card {
     padding: 25px;

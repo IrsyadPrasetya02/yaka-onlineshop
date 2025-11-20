@@ -66,7 +66,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('products/{product}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
     Route::put('variants/{variant}', [AdminProductController::class, 'updateVariant'])->name('variants.update');
     Route::delete('variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('variants.destroy');
-    Route::delete('product-images/{image}', [AdminProductController::class, 'deleteImage'])->name('product-images.destroy');
+    Route::delete('product-images/{image}', [AdminProductController::class, 'deleteImage'])->name('product-images.destroy'); 
+    Route::delete('products/{product}/variants/{variant}', [AdminProductController::class, 'destroyVariant'])->name('products.variants.delete');
 
     // Categories
     Route::resource('categories', AdminCategoryController::class);

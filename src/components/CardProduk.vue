@@ -53,6 +53,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   produk: {
@@ -61,31 +62,43 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
+
 // Format harga dengan titik pemisah ribuan
 const formatHarga = (harga) => {
   return harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 }
 
-// Fungsi tambah ke keranjang
+// Fungsi untuk menambahkan produk ke keranjang
 const tambahKeKeranjang = () => {
-  // TODO: Implementasi logika tambah ke keranjang
-  // Untuk sementara hanya console.log
-  console.log('Produk ditambahkan ke keranjang:', props.produk)
-  
-  // Nantinya bisa menggunakan Pinia/Vuex store atau localStorage
-  // Contoh dengan localStorage (sementara tanpa login):
-  // const keranjang = JSON.parse(localStorage.getItem('keranjang') || '[]')
-  // keranjang.push(props.produk)
-  // localStorage.setItem('keranjang', JSON.stringify(keranjang))
-  
-  alert(`${props.produk.nama} ditambahkan ke keranjang!`)
+  if (props.produk.stok === 0) return
+
+  // Ambil cart dari localStorage
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]')
+
+  // Cek apakah produk sudah ada di cart
+  const index = cart.findIndex(item => item.id === props.produk.id)
+  if (index !== -1) {
+    cart[index].quantity += 1
+  } else {
+    cart.push({ ...props.produk, quantity: 1 })
+  }
+
+  // Simpan kembali ke localStorage
+  localStorage.setItem('cart', JSON.stringify(cart))
+
+  // Redirect ke halaman Cart
+  router.push({ name: 'Cart' })
 }
 
 // Fungsi beli sekarang
 const beliSekarang = () => {
-  // TODO: Implementasi logika beli sekarang
-  console.log('Beli sekarang:', props.produk)
-  alert(`Membeli ${props.produk.nama}`)
+  if (props.produk.stok === 0) return
+
+  router.push({
+    name: 'DetailProduk',
+    params: { id: props.produk.id }
+  })
 }
 </script>
 
